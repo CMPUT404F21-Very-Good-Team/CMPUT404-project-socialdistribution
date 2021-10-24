@@ -1,3 +1,7 @@
+import django_heroku
+import dotenv
+import dj_database_url
+import os
 """
 Django settings for Social_Distribution project.
 
@@ -10,12 +14,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import django_heroku
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -53,7 +60,7 @@ REST_FRAMEWORK = {
      #   'rest_framework.authentication.BasicAuthentication',
      #   'rest_framework.authentication.SessionAuthentication',
     )
-    
+
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -122,12 +129,8 @@ WSGI_APPLICATION = 'Social_Distribution.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, default='sqlite://db/db.sqlite3')
 
 
 # Password validation
@@ -167,3 +170,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
+# Add these at the very last line of settings.py
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)
