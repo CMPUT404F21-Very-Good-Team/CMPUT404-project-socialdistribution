@@ -21,6 +21,8 @@ urlpatterns = [
     path('posts', views.index.as_view(), name='posts'),
     # /author/{author_id}/posts/{post_id}
     path('posts/<str:post_id>', views.post.as_view(), name='post'),
+    # /author/{author_id}/posts/{post_id}/raw
+    path('posts/<str:post_id>/raw', views.rawPost.as_view(), name='rawPostData'),
     # /author/{author_id}/posts/{post_id}/comments
     path('posts/<str:post_id>/comments', views.comments.as_view(), name='comments'),
     # /author/{author_id}/post/{post_id}/likes
