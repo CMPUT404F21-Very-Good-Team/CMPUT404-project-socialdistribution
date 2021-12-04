@@ -17,7 +17,7 @@ import uuid
 from datetime import datetime, timezone
 from django.contrib.contenttypes.models import ContentType
 from Social_Distribution import utils
-
+import base64
 class index(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -352,3 +352,50 @@ class commentLikes(APIView):
         serializer = LikeSerializer(likes,many = True)
         response = {'type':'likes','items': serializer.data}
         return Response(response)
+
+class rawPost(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,author_id, post_id):
+        try:
+            post = Post.objects.get(ownerID=author_id, postID=post_id)
+        except Post.DoesNotExist:
+            return Response("The requested post does not exist.", status=404)
+        # only return public post unless you own the post or follow the owner of the post
+        if not post.isPublic:
+            try:
+                user = request.user.author
+            except:
+                # The user does not have an author profile
+                return Response("You do not have permission to view this post.", status=403)
+            postAuthor = Author.objects.get(authorID=author_id)
+            if postAuthor.node is not None:
+                # Check other node to see if user is following this author
+                try:
+                    response = requests.get(postAuthor.node.host_url + "author/" + author_id + "/followers", auth=(postAuthor.node.username, postAuthor.node.password))
+                    is_author_friend = False
+                    followers = response.json()["items"]
+                    for follower in followers:
+                        if follower["id"].split("/")[-1] == str(user.authorID):
+                            is_author_friend = True
+                except KeyError:
+                    return Response("Unable to confirm that you have permission to view this post.", status=403)
+            else:
+                # Check the local inbox to see if the user is following this author
+                is_author_friend = Follow.objects.filter(toAuthor=author_id, fromAuthor=str(user.authorID)).exists()
+            if not is_author_friend and str(user.authorID) != author_id:
+                return Response("You do not have permission to view this post.", status=403)
+        serializer = PostSerializer(post)
+
+        file_type = serializer.data["contentType"]
+        file_data = ''
+        if 'base64' in file_type:
+            file_type = file_type.split(';')[0]
+            file_data = base64.b64decode(serializer.data["content"].split(',')[1])
+        else:
+            file_data = serializer.data["content"]
+        try:
+            return HttpResponse(file_data, content_type=file_type)
+        except:
+            return Response(status=500)
