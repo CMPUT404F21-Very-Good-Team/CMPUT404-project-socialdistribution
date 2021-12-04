@@ -5,7 +5,7 @@ Hostname (and Deployed Website): https://cmput404-vgt-socialdist.herokuapp.com/
 
 API Prefix: /service/
 
-API Documentation: https://docs.google.com/document/d/1icvrhxa3Ai3Sc3dBdnN-X_EZxAVdq5SE8R2Eqibc-9s/
+API Documentation: https://github.com/CMPUT404F21-Very-Good-Team/CMPUT404-project-socialdistribution/wiki/API-Documentation
 
 Basic Auth Username: VeryGoodAuth
 
