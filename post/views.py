@@ -361,7 +361,7 @@ class rawPost(APIView):
         try:
             post = Post.objects.get(ownerID=author_id, postID=post_id)
         except Post.DoesNotExist:
-            return Response("The requested post does not exist.", status = 404)
+            return Response("The requested post does not exist.", status=404)
         # only return public post unless you own the post or follow the owner of the post
         if not post.isPublic:
             try:
@@ -380,14 +380,12 @@ class rawPost(APIView):
                         if follower["id"].split("/")[-1] == str(user.authorID):
                             is_author_friend = True
                 except KeyError:
-                    return Response("Unable to confirm that you have permission to view this post.", status = 403)
+                    return Response("Unable to confirm that you have permission to view this post.", status=403)
             else:
                 # Check the local inbox to see if the user is following this author
                 is_author_friend = Follow.objects.filter(toAuthor=author_id, fromAuthor=str(user.authorID)).exists()
             if not is_author_friend and str(user.authorID) != author_id:
-                return Response("You do not have permission to view this post.", status = 403)
-
-        post = Post.objects.get(ownerID=author_id, postID=post_id)
+                return Response("You do not have permission to view this post.", status=403)
         serializer = PostSerializer(post)
 
         file_type = serializer.data["contentType"]
