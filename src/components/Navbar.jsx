@@ -30,7 +30,8 @@ const Navbar = () => {
 
   return (
     <div className='navbarContainer'>
-
+      <text id="brand"> Socialisolation&nbsp;&nbsp;&nbsp;&nbsp; </text>
+      
       {!user?.username ? (
         <>
           <Link to='/'> Login </Link>

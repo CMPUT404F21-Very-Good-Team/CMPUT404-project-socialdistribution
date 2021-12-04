@@ -7,9 +7,9 @@
   padding-right: 15%;
   padding-top: 0.25%;
   padding-bottom: 0.25%;
-  background-color: rgb(31, 31, 31);
-  font-size: 1.5vw;
-  font-weight: 300;
+  background-color: rgb(20 23 26);
+  font-size: 1.1vw;
+  font-weight: 400;
   height: 4vh;
 }
 
@@ -218,7 +218,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 20px;
-
+  margin-bottom: 10px;
 }
 .postPreviewContainer:hover {
   cursor: pointer;
@@ -310,6 +310,13 @@ p.hostDisplay {
   font-size: 14px;
   font-weight: 300;
   margin: 0;
+}
+
+#brand {
+  color: rgb(170, 144, 198);
+  font-size: 35px;
+  font-weight: bold;
+  font-family: cursive;
 }
 
 .previewPic {
