@@ -292,14 +292,6 @@ class follower(APIView):
 
     def delete(self, request, author_id, foreign_author_id):
         try:
-            author = request.user.author
-        except:
-            # The user does not have an author profile
-            return Response(status=403)
-        if str(author.authorID) != author_id:
-            # The request was made by a different author
-            return Response(status=403)
-        try:
             Follow.objects.get(fromAuthor=foreign_author_id, toAuthor=author_id).delete()
         except:
             # Nothing to delete
