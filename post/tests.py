@@ -63,7 +63,7 @@ class TestPostViewsComments(TestCase):
         c = Client()
         c.force_login(self.USER)
         response = c.get(self.VIEW_URL)
-        print(response)
+        # print(response)
         content = response.json()
         self.assertEqual(2, len(content["comments"]))
         self.assertEqual(response.status_code, 200)
@@ -89,7 +89,7 @@ class TestPostViewsComments(TestCase):
         c = Client()
         c.force_login(self.USER)
         response = c.post(self.VIEW_URL, post_data, "application/json")
-        self.assertEqual(200, response.status_code)
+        self.assertEqual(201, response.status_code)
         self.assertEqual(1, Comment.objects.count())
 
 class TestPostViewsIndex(TestCase):
@@ -429,7 +429,7 @@ class TestLikeViews(TestCase):
         self.test_like_post.save()
         self.test_comment.save()
         self.test_like_comment.save()
-        self.VIEW_URL = "/service/author/{}/post/{}/likes".format(self.author_user_1,post_id)
+        self.VIEW_URL = "/service/author/{}/posts/{}/likes".format(self.author_user_1,post_id)
 
     def testGetLikesPost(self):
         c = Client()
@@ -443,7 +443,6 @@ class TestLikeViews(TestCase):
         c = Client()
         c.force_login(self.user1)
         c.force_login(self.user2)
-        self.VIEW_URL = "/service/author/{}/post/{}/comments/{}/likes".format(self.author_user_1,self.publicPost.postID,self.test_comment.commentID)
+        self.VIEW_URL = "/service/author/{}/posts/{}/comments/{}/likes".format(self.author_user_1,self.publicPost.postID,self.test_comment.commentID)
         response = c.get(self.VIEW_URL)
-        #print(response.data)
         self.assertEqual(200,response.status_code)

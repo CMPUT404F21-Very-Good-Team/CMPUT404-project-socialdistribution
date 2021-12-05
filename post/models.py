@@ -25,7 +25,10 @@ class Post(models.Model):
         return self.ownerID.get_url() + "/posts/" + str(self.postID)
 
     def get_categories(self):
-        return self.categories.split(";")
+        if self.categories is not None:
+            return self.categories.split(";")
+        else:
+            return []
 
     def get_comment_count(self):
         return Comment.objects.filter(postID=self.postID).count()

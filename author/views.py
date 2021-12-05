@@ -235,14 +235,14 @@ class follower(APIView):
         except ValidationError as e:
             foreignID = foreign_author_id
         if author.node is not None:
-            print(foreignID)
+            # print(foreignID)
             follower = Author.objects.get(authorID=foreignID)
             if author.node.host_url == "https://social-distribution-fall2021.herokuapp.com/api/": 
                 response = requests.get(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + follower.get_url(), auth=(author.node.username, author.node.password))
-                print(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + follower.get_url())
+                # print(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + follower.get_url())
             else:
                 response = requests.get(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + foreign_author_id + "/", auth=(author.node.username, author.node.password))
-                print(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + foreign_author_id + "/")
+                # print(author.node.host_url + "author/" + str(author.authorID) + "/followers/" + foreign_author_id + "/")
             if response.status_code >= 300:
                 return Response(response.text, response.status_code)
             if response.text == '"true"':
@@ -367,7 +367,7 @@ class inbox(APIView):
         return Response(response, status=200)
 
     def post(self, request, author_id):
-        print(request.data)
+        # print(request.data)
         # Update authors in case this was sent by or to an author that our local node does not know about
         utils.update_authors()
 
@@ -387,10 +387,10 @@ class inbox(APIView):
                 response = requests.post(destination, auth=(inbox_recipient.node.username, inbox_recipient.node.password), json=request.data)
                 if response.status_code >= 300:
                     print("Could not connect to the host: " + inbox_recipient.host)
-                    print(response.text)
-                    print(response.status_code)
-                    print(destination)
-                    print(request.data)
+                    # print(response.text)
+                    # print(response.status_code)
+                    # print(destination)
+                    # print(request.data)
                 else:
                     print("Sent to inbox!")
                     print(response.status_code)
@@ -403,7 +403,7 @@ class inbox(APIView):
         try:
             if data["type"].lower() == "post":
                 # save the post to the Post table if it is not already there
-                print(data)
+                # print(data)
                 if data["id"] != None:
                     postID = data["id"].split("/")[-1]
                 else: 
@@ -414,12 +414,12 @@ class inbox(APIView):
                 except Author.DoesNotExist:
                     return Response("The author with id " + postAuthorID  + " was expected to be on the server but was not found.", status=400)
                 if postID == None or not Post.objects.filter(postID=postID).exists():
-                    print("creating post...")
+                    # print("creating post...")
                     serializer = PostSerializer(data=data)
                     if serializer.is_valid():
                         post = serializer.save()
                         postID = post.postID
-                        print(post)
+                        # print(post)
                     else:
                         print(serializer.errors)
                         return Response(status=400)
@@ -466,7 +466,7 @@ class inbox(APIView):
                     content_type = ContentType.objects.get(model="post")
                 Inbox.objects.create(authorID=inbox_recipient, inboxType=inboxType, summary=summary, fromAuthor=fromAuthor, date=date, objectID=objectID, content_type=content_type)
             elif data["type"].lower() == "comment":
-                print(data)
+                # print(data)
                 if "id" in data:
                     if "/comments" in data["id"]:
                         commentID = data["id"].split("/")[-1]

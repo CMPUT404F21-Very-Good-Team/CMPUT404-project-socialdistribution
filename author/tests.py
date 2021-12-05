@@ -292,9 +292,9 @@ class TestAuthorViewsInbox(TestCase):
             self.VIEW_URL,
             post_data,
             "application/json")
-        print(response.status_code)
+        # print(response.status_code)
         self.assertEqual(2, Inbox.objects.filter(inboxType = "follow").count())
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def testSendLike(self):
         c = Client()
@@ -331,7 +331,7 @@ class TestAuthorViewsInbox(TestCase):
             self.VIEW_URL,
             post_data,
             "application/json")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(2, Inbox.objects.filter(inboxType = "like").count())
         self.assertTrue(Like.objects.filter(objectID="6a6259fa-8df4-4630-81a9-974f46f9ef66").exists())
 
@@ -384,7 +384,7 @@ class TestAuthorViewsInbox(TestCase):
             self.VIEW_URL,
             post_data,
             "application/json")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(2, Inbox.objects.filter(inboxType = "post").count())
         self.assertTrue(Post.objects.filter(postID="bd687c13-984e-4a90-8e63-bcb8689b7456").exists())
 
