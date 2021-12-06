@@ -15,7 +15,7 @@ class Post(models.Model):
     origin = models.URLField(null=True, blank=True)
     description = models.TextField(null=True)
     # The categories field will be a semicolon separated set of tags
-    categories = models.TextField(null=True)
+    categories = models.TextField(null=True, blank=True)
     isPublic = models.BooleanField()
     isListed = models.BooleanField()
     hasImage = models.BooleanField()
