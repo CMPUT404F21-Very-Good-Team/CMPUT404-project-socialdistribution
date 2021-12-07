@@ -331,8 +331,14 @@ class commentLikes(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request,author_id,post_id,comment_id):
+        #print("here")
         if not Post.objects.filter(postID=post_id, ownerID=author_id).exists() or not Comment.objects.filter(commentID=comment_id, postID=post_id).exists():
-            return Response(status=404)
+            #print("NOT FOUND")
+            #if Post.objects.filter(postID=post_id, ownerID=author_id).exists():
+                #print("post not found")
+            #else:
+                #print("comment not found")
+            return Response("Not found", status=404)
         postAuthor = Author.objects.get(authorID = author_id)
         if postAuthor.node is not None:
             # Get the likes from a different node
